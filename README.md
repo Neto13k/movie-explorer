@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Movie Explorer
 
-## Getting Started
+> 🚧 Projeto em desenvolvimento. Este README descreve o escopo planejado, não o estado atual da aplicação.
 
-First, run the development server:
+Aplicação Next.js que consome a API da TMDB para explorar filmes populares, com busca por título, filtro por gênero e infinite scroll. Construída como projeto de aprendizado (primeiro projeto em Next.js) e portfólio.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Escopo planejado
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [ ] Home com listagem de filmes populares (Server Component)
+- [ ] Busca por título com debounce (Client Component)
+- [ ] Filtro por gênero (mesma página, sem navegação para rota separada)
+- [ ] Página de detalhe do filme (elenco, sinopse, avaliação)
+- [ ] Loading state com skeleton
+- [ ] Error state com mensagem amigável
+- [ ] Infinite scroll
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Framework:** Next.js (App Router)
+- **Linguagem:** TypeScript
+- **Estilização:** Tailwind CSS
+- **Otimização:** React Compiler
+- **API de dados:** [The Movie Database (TMDB)](https://www.themoviedb.org/)
