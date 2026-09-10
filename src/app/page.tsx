@@ -1,4 +1,5 @@
 import { Genre, Movie } from "../app/types/index";
+import Link from "next/link";
 
 export default async function Page() {
   const [moviesResponse, genresResponse] = await Promise.all([
@@ -61,20 +62,22 @@ export default async function Page() {
       <ul>
         {movies.map((movie) => (
           <li key={movie.id}>
-            {movie.poster_path && (
-              <img
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
-              />
-            )}
+            <Link href={`/movie/${movie.id}`}>
+              {movie.poster_path && (
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  alt={movie.title}
+                />
+              )}
 
-            <h2>{movie.title}</h2>
+              <h2>{movie.title}</h2>
 
-            <ul>
-              {movie.genres.map((genre) => (
-                <li key={genre.id}>{genre.name}</li>
-              ))}
-            </ul>
+              <ul>
+                {movie.genres.map((genre) => (
+                  <li key={genre.id}>{genre.name}</li>
+                ))}
+              </ul>
+            </Link>
           </li>
         ))}
       </ul>
