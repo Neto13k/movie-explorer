@@ -30,3 +30,6 @@ export interface MovieDetails {
   }[];
 }
 
+export interface MovieWithGenres extends Omit<Movie, "genre_ids"> {
+  genres: Genre[];
+}

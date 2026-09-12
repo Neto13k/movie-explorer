@@ -1,5 +1,5 @@
 import { Genre, Movie } from "../app/types/index";
-import Link from "next/link";
+import FilterFilms from "./components/FilterFilms";
 
 export default async function Page() {
   const [moviesResponse, genresResponse] = await Promise.all([
@@ -57,30 +57,7 @@ export default async function Page() {
 
   return (
     <main>
-      <h1>Filmes populares</h1>
-
-      <ul>
-        {movies.map((movie) => (
-          <li key={movie.id}>
-            <Link href={`/movie/${movie.id}`}>
-              {movie.poster_path && (
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                />
-              )}
-
-              <h2>{movie.title}</h2>
-
-              <ul>
-                {movie.genres.map((genre) => (
-                  <li key={genre.id}>{genre.name}</li>
-                ))}
-              </ul>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <FilterFilms movies={movies} genres={genresData.genres} />
     </main>
   );
 }
