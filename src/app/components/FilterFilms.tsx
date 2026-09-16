@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { MovieWithGenres, Genre } from '../types/index'
+import SearchBar from './SearchBar'
 import Link from "next/link"
 
 type FilterFilmsProps = {
@@ -14,6 +15,8 @@ export default function FilterFilms({
   genres,
 }: FilterFilmsProps) {
   const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
+const [searchTerm, setSearchTerm] = useState("");
+
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -22,12 +25,11 @@ export default function FilterFilms({
     setSelectedGenre(genreId);
   };
 
-  const filteredMovies =
-    selectedGenre === null
-      ? movies
-      : movies.filter((movie) =>
-          movie.genres.some((genre) => genre.id === selectedGenre)
-        );
+  const filteredMovies = movies.filter((movie) =>
+  (selectedGenre === null ||
+    movie.genres.some((genre) => genre.id === selectedGenre)) &&
+  movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   return (
     <div>
@@ -40,6 +42,8 @@ export default function FilterFilms({
           </option>
         ))}
       </select>
+
+      <SearchBar onSearch={setSearchTerm} />
 
       <ul>
         {filteredMovies.map((movie) => (
