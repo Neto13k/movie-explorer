@@ -3,13 +3,13 @@ import FilterFilms from "./components/FilterFilms";
 
 export default async function Page() {
   const [moviesResponse, genresResponse] = await Promise.all([
-    fetch("https://api.themoviedb.org/3/movie/popular", {
+    fetch("https://api.themoviedb.org/3/movie/popular?language=pt-BR", {
       headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
       },
     }),
 
-    fetch("https://api.themoviedb.org/3/genre/movie/list", {
+    fetch("https://api.themoviedb.org/3/genre/movie/list?language=pt-BR", {
       headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
       },
