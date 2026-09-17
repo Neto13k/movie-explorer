@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { MovieWithGenres, Genre, Movie } from '../types/index'
 import SearchBar from './SearchBar'
 import Link from "next/link"
@@ -17,6 +17,9 @@ export default function FilterFilms({
   const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<MovieWithGenres[] | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [allMovies, setAllMovies] = useState<MovieWithGenres[]>(movies);
+  const observerRef = useRef<HTMLDivElement | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -73,7 +76,60 @@ export default function FilterFilms({
     buscarFilmes();
   }, [searchTerm, genresMap]);
 
-  const filteredMovies = (searchResults ?? movies).filter((movie) =>
+  async function carregarMaisFilmes() {
+  const nextPage = currentPage + 1;
+
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/popular?language=pt-BR&page=${nextPage}`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
+      },
+    }
+  );
+
+  const data = await response.json();
+
+  const novosFilmes = data.results.map((movie: Movie) => ({
+    ...movie,
+    genres: movie.genre_ids
+      .map((genreId) => {
+        const name = genresMap.get(genreId);
+
+        if (!name) {
+          return null;
+        }
+
+        return {
+          id: genreId,
+          name,
+        };
+      })
+      .filter(
+        (genre): genre is { id: number; name: string } => genre !== null
+      ),
+  }));
+
+  setAllMovies((filmesAtuais) => [...filmesAtuais, ...novosFilmes]);
+  setCurrentPage(nextPage);
+}
+useEffect(() => {
+  const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      carregarMaisFilmes();
+    }
+  });
+
+  if (observerRef.current) {
+    observer.observe(observerRef.current);
+  }
+
+  return () => {
+    observer.disconnect();
+  };
+}, [currentPage]);
+
+  const filteredMovies = (searchResults ?? allMovies).filter((movie) =>
     selectedGenre === null ||
     movie.genres.some((genre) => genre.id === selectedGenre)
   );
@@ -114,6 +170,7 @@ export default function FilterFilms({
           </li>
         ))}
       </ul>
+      <div ref={observerRef} style={{ height: "1px" }}></div>
     </div>
   );
 }
