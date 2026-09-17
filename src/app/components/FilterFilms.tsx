@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from "react";
-import { MovieWithGenres, Genre } from '../types/index'
+import { useState, useEffect } from "react";
+import { MovieWithGenres, Genre, Movie } from '../types/index'
 import SearchBar from './SearchBar'
 import Link from "next/link"
 
@@ -15,8 +15,8 @@ export default function FilterFilms({
   genres,
 }: FilterFilmsProps) {
   const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
-const [searchTerm, setSearchTerm] = useState("");
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState<MovieWithGenres[] | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -25,11 +25,58 @@ const [searchTerm, setSearchTerm] = useState("");
     setSelectedGenre(genreId);
   };
 
-  const filteredMovies = movies.filter((movie) =>
-  (selectedGenre === null ||
-    movie.genres.some((genre) => genre.id === selectedGenre)) &&
-  movie.title.toLowerCase().includes(searchTerm.toLowerCase())
-);
+  const genresMap = new Map<number, string>(
+    genres.map((genre) => [genre.id, genre.name])
+  );
+
+  useEffect(() => {
+    if (searchTerm === "") {
+      setSearchResults(null);
+      return;
+    }
+
+    async function buscarFilmes() {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&language=pt-BR`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      const resultados = data.results.map((movie: Movie) => ({
+        ...movie,
+        genres: movie.genre_ids
+          .map((genreId) => {
+            const name = genresMap.get(genreId);
+
+            if (!name) {
+              return null;
+            }
+
+            return {
+              id: genreId,
+              name,
+            };
+          })
+          .filter(
+            (genre): genre is { id: number; name: string } => genre !== null
+          ),
+      }));
+
+      setSearchResults(resultados);
+    }
+
+    buscarFilmes();
+  }, [searchTerm, genresMap]);
+
+  const filteredMovies = (searchResults ?? movies).filter((movie) =>
+    selectedGenre === null ||
+    movie.genres.some((genre) => genre.id === selectedGenre)
+  );
 
   return (
     <div>
