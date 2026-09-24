@@ -1,10 +1,30 @@
 import { MovieDetails, CastMember } from "@/app/types";
 
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?language=pt-BR`, {
+  headers: {
+    Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
+  },
+  });
+
+  if (!response.ok) {
+    throw new Error('Falha ao buscar os dados');
+  }
+
+  const movie: MovieDetails = await response.json();
+
+return {
+  title: `${movie.title} | Movie Explorer`,
+  description: movie.overview,
+};
+}
+
 export default async function MovieDetailPage({ params }) {
   const { id } = await params;
 
   const [movieResponse, creditsResponse] = await Promise.all([
-    fetch(`https://api.themoviedb.org/3/movie/${id}?language=pt-BR}`, {
+    fetch(`https://api.themoviedb.org/3/movie/${id}?language=pt-BR`, {
       headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
       },
