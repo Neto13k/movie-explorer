@@ -1,6 +1,11 @@
 import { Genre, Movie } from "../app/types/index";
 import FilterFilms from "./components/FilterFilms";
 
+export const metadata = {
+  title: "Filmes Populares | Movie Explorer",
+  description: "Veja os filmes mais populares do momento, com busca por título, filtro por gênero e rolagem infinita.",
+};
+
 export default async function Page() {
   const [moviesResponse, genresResponse] = await Promise.all([
     fetch("https://api.themoviedb.org/3/movie/popular?language=pt-BR", {
