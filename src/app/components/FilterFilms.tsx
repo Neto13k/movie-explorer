@@ -150,23 +150,27 @@ useEffect(() => {
 
       <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 list-none">
         {filteredMovies.map((movie) => (
-          <li key={movie.id}>
+          <li key={movie.id} className="rounded-lg overflow-hidden border border-foreground/10 hover:border-accent transition-colors">
             <Link href={`/movie/${movie.id}`}>
-              {movie.poster_path && (
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                />
-              )}
+  {movie.poster_path && (
+    <img className="w-full aspect-[2/3] object-cover"
+      src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+      alt={movie.title}
+    />
+  )}
 
-              <h2>{movie.title}</h2>
+  <div className="p-2">
+    <h2 className="text-sm font-semibold truncate">{movie.title}</h2>
 
-              <ul>
-                {movie.genres.map((genre) => (
-                  <li key={genre.id}>{genre.name}</li>
-                ))}
-              </ul>
-            </Link>
+    <ul className="flex flex-wrap gap-1 mt-1 list-none">
+      {movie.genres.map((genre) => (
+        <li key={genre.id} className="text-xs text-foreground/60">
+          {genre.name}
+        </li>
+      ))}
+    </ul>
+  </div>
+</Link>
           </li>
         ))}
       </ul>
