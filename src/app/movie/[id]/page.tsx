@@ -86,23 +86,23 @@ export default async function MovieDetailPage({ params }) {
 </div>
       </div>
 
-      <h2>Elenco</h2>
+      <h2 className="text-xl font-bold mt-8 mb-3">Elenco</h2>
 
-      <div>
-        {cast.map((member) => (
-          <div key={member.id}>
-            {member.profile_path && (
-              <img
-                src={`https://image.tmdb.org/t/p/w185${member.profile_path}`}
-                alt={`Foto de ${member.name}`}
-              />
-            )}
-
-            <p>{member.name}</p>
-            <p>{member.character}</p>
-          </div>
-        ))}
-      </div>
+<div className="flex gap-4 overflow-x-auto pb-2">
+  {cast.map((member) => (
+    <div key={member.id} className="flex-shrink-0 w-28">
+      {member.profile_path && (
+        <img
+          src={`https://image.tmdb.org/t/p/w185${member.profile_path}`}
+          alt={`Foto de ${member.name}`}
+          className="w-full aspect-[2/3] object-cover rounded-md"
+        />
+      )}
+      <p className="text-sm font-medium mt-1 truncate">{member.name}</p>
+      <p className="text-xs text-foreground/60 truncate">{member.character}</p>
+    </div>
+  ))}
+</div>
     </main>
   );
 }
