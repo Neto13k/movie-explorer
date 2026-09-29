@@ -110,7 +110,13 @@ export default function FilterFilms({
       ),
   }));
 
-  setAllMovies((filmesAtuais) => [...filmesAtuais, ...novosFilmes]);
+  setAllMovies((filmesAtuais) => {
+  const filmesSemDuplicata = novosFilmes.filter((filme) =>
+  !filmesAtuais.some((filmeExistente) => filmeExistente.id === filme.id)
+);
+
+  return [...filmesAtuais, ...filmesSemDuplicata];
+});
   setCurrentPage(nextPage);
 }
 useEffect(() => {
