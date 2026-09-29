@@ -2,22 +2,25 @@ import { MovieDetails, CastMember } from "@/app/types";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
-  const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?language=pt-BR`, {
-  headers: {
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
-  },
-  });
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/${id}?language=pt-BR`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
+      },
+    },
+  );
 
   if (!response.ok) {
-    throw new Error('Falha ao buscar os dados');
+    throw new Error("Falha ao buscar os dados");
   }
 
   const movie: MovieDetails = await response.json();
 
-return {
-  title: `${movie.title} | Movie Explorer`,
-  description: movie.overview,
-};
+  return {
+    title: `${movie.title} | Movie Explorer`,
+    description: movie.overview,
+  };
 }
 
 export default async function MovieDetailPage({ params }) {
@@ -39,44 +42,47 @@ export default async function MovieDetailPage({ params }) {
 
   if (!movieResponse.ok) {
     throw new Error(
-      `Erro ao buscar filme: ${movieResponse.status} ${movieResponse.statusText}`
+      `Erro ao buscar filme: ${movieResponse.status} ${movieResponse.statusText}`,
     );
   }
 
   if (!creditsResponse.ok) {
     throw new Error(
-      `Erro ao buscar créditos: ${creditsResponse.status} ${creditsResponse.statusText}`
+      `Erro ao buscar créditos: ${creditsResponse.status} ${creditsResponse.statusText}`,
     );
   }
 
   const movie: MovieDetails = await movieResponse.json();
-  const creditsData: { cast: CastMember[] } =
-    await creditsResponse.json();
+  const creditsData: { cast: CastMember[] } = await creditsResponse.json();
 
   const cast = creditsData.cast;
 
   return (
-    <main>
-      {movie.poster_path && (
-        <img
-          src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-          alt={`Poster de ${movie.title}`}
-        />
-      )}
+    <main className="max-w-5xl mx-auto p-4">
+      <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6">
+        <div>
+          {movie.poster_path && (
+            <img
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={`Poster de ${movie.title}`}
+            />
+          )}
+        </div>
 
-      <h1>{movie.title}</h1>
+        <div>
+          <h1>{movie.title}</h1>
 
-      <div>
-        {movie.genres.map((genre) => (
-          <span key={genre.id}>{genre.name}</span>
-        ))}
+          <div>
+            {movie.genres.map((genre) => (
+              <span key={genre.id}>{genre.name}</span>
+            ))}
+          </div>
+
+          <p>{movie.release_date}</p>
+          <p>Nota: {movie.vote_average.toFixed(1)}</p>
+          <p>{movie.overview}</p>
+        </div>
       </div>
-
-      <p>{movie.release_date}</p>
-
-      <p>Nota: {movie.vote_average.toFixed(1)}</p>
-
-      <p>{movie.overview}</p>
 
       <h2>Elenco</h2>
 
