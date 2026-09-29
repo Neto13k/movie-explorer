@@ -69,19 +69,21 @@ export default async function MovieDetailPage({ params }) {
           )}
         </div>
 
-        <div>
-          <h1>{movie.title}</h1>
+       <div className="space-y-3">
+  <h1 className="text-2xl font-bold">{movie.title}</h1>
 
-          <div>
-            {movie.genres.map((genre) => (
-              <span key={genre.id}>{genre.name}</span>
-            ))}
-          </div>
+  <div className="flex flex-wrap gap-2">
+    {movie.genres.map((genre) => (
+      <span key={genre.id} className="text-xs bg-foreground/10 rounded-full px-2 py-1">
+        {genre.name}
+      </span>
+    ))}
+  </div>
 
-          <p>{movie.release_date}</p>
-          <p>Nota: {movie.vote_average.toFixed(1)}</p>
-          <p>{movie.overview}</p>
-        </div>
+  <p className="text-sm text-foreground/70">{movie.release_date}</p>
+  <p className="text-accent font-semibold">Nota: {movie.vote_average.toFixed(1)}</p>
+  <p className="text-sm leading-relaxed">{movie.overview}</p>
+</div>
       </div>
 
       <h2>Elenco</h2>
