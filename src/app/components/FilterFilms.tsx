@@ -142,6 +142,7 @@ useEffect(() => {
 
   return (
     <div>
+      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur border-b border-foreground/10 p-4 mb-6 flex flex-wrap gap-4 items-center">
       <select value={selectedGenre ?? ""} onChange={handleChange}>
         <option value="">Todos os gêneros</option>
 
@@ -153,6 +154,7 @@ useEffect(() => {
       </select>
 
       <SearchBar onSearch={setSearchTerm} />
+      </div>
 
       <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 list-none">
         {filteredMovies.map((movie) => (
