@@ -19,16 +19,18 @@ const [valorDigitado, setValorDigitado] = useState<string>('');
   }, [valorDigitado, onSearch]);
 
   return (
-    <div>
-      <label htmlFor="busca">Buscar:</label>
-      <input
-        id="busca"
-        type="text"
-        value={valorDigitado}
-        onChange={handleChange}
-        placeholder="Digite para buscar..."
-      />
-    </div>
-    
-  )
+  <div className="flex items-center gap-2">
+    <label htmlFor="busca" className="text-sm text-foreground/70">
+      Buscar:
+    </label>
+    <input
+      id="busca"
+      type="text"
+      value={valorDigitado}
+      onChange={handleChange}
+      placeholder="Digite para buscar..."
+      className="bg-background border border-foreground/20 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-accent"
+    />
+  </div>
+);
 }
