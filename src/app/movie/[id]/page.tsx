@@ -69,40 +69,47 @@ export default async function MovieDetailPage({ params }) {
           )}
         </div>
 
-       <div className="space-y-3">
-  <h1 className="text-2xl font-bold">{movie.title}</h1>
+        <div className="space-y-3">
+          <h1 className="text-2xl font-bold">{movie.title}</h1>
 
-  <div className="flex flex-wrap gap-2">
-    {movie.genres.map((genre) => (
-      <span key={genre.id} className="text-xs bg-foreground/10 rounded-full px-2 py-1">
-        {genre.name}
-      </span>
-    ))}
-  </div>
+          <div className="flex flex-wrap gap-2">
+            {movie.genres.map((genre) => (
+              <span
+                key={genre.id}
+                className="text-xs bg-foreground/10 rounded-full px-2 py-1"
+              >
+                {genre.name}
+              </span>
+            ))}
+          </div>
 
-  <p className="text-sm text-foreground/70">{movie.release_date}</p>
-  <p className="text-accent font-semibold">Nota: {movie.vote_average.toFixed(1)}</p>
-  <p className="text-sm leading-relaxed">{movie.overview}</p>
-</div>
+          <p className="text-sm text-foreground/70">{movie.release_date}</p>
+          <p className="text-accent font-semibold">
+            Nota: {movie.vote_average.toFixed(1)}
+          </p>
+          <p className="text-sm leading-relaxed">{movie.overview}</p>
+        </div>
       </div>
 
       <h2 className="text-xl font-bold mt-8 mb-3">Elenco</h2>
 
-<div className="flex gap-4 overflow-x-auto pb-2">
-  {cast.map((member) => (
-    <div key={member.id} className="flex-shrink-0 w-28">
-      {member.profile_path && (
-        <img
-          src={`https://image.tmdb.org/t/p/w185${member.profile_path}`}
-          alt={`Foto de ${member.name}`}
-          className="w-full aspect-[2/3] object-cover rounded-md"
-        />
-      )}
-      <p className="text-sm font-medium mt-1 truncate">{member.name}</p>
-      <p className="text-xs text-foreground/60 truncate">{member.character}</p>
-    </div>
-  ))}
-</div>
+      <div className="flex gap-4 overflow-x-auto pb-2">
+        {cast.map((member) => (
+          <div key={member.id} className="flex-shrink-0 w-28">
+            {member.profile_path && (
+              <img
+                src={`https://image.tmdb.org/t/p/w185${member.profile_path}`}
+                alt={`Foto de ${member.name}`}
+                className="w-full aspect-[2/3] object-cover rounded-md"
+              />
+            )}
+            <p className="text-sm font-medium mt-1 truncate">{member.name}</p>
+            <p className="text-xs text-foreground/60 truncate">
+              {member.character}
+            </p>
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
