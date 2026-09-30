@@ -1,15 +1,11 @@
 export default function Loading() {
-  const quantidadeDeBlocos = 6;
-
   return (
-    <div>
-      {Array.from({ length: quantidadeDeBlocos }).map((_, index) => (
-        <div key={index}>
-          <div>{/*imagem*/}</div>
-          <div>{/*título*/}</div>
-          <div>{/*genero*/}</div>
-        </div>
-      ))}
+    <div className="flex min-h-[50vh] items-center justify-center">
+      <div role="status" className="relative h-12 w-12 animate-spin">
+        <div className="absolute left-0 top-0 h-4 w-4 rounded-full bg-accent" />
+        <div className="absolute bottom-0 right-0 h-4 w-4 rounded-full bg-foreground" />
+        <span className="sr-only">Carregando…</span>
+      </div>
     </div>
   );
 }
