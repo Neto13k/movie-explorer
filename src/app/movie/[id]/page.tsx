@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { MovieDetails, CastMember } from "@/app/types";
 
 export async function generateMetadata({ params }) {
@@ -110,6 +111,13 @@ export default async function MovieDetailPage({ params }) {
           </div>
         ))}
       </div>
+
+      <Link
+        href="/"
+        className="inline-block mt-8 px-4 py-2 rounded-md bg-accent text-background font-medium hover:opacity-90 transition-opacity"
+      >
+        Voltar
+      </Link>
     </main>
   );
 }
