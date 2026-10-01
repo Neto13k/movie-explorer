@@ -16,7 +16,7 @@ export default function ThemeToggle() {
 return (
   <button
     onClick={() => setIsDark(!isDark)}
-    className="fixed top-4 right-4 z-20 bg-foreground/10 hover:bg-accent hover:text-background rounded-full px-3 py-1.5 text-sm transition-colors"
+    className="bg-foreground/10 hover:bg-accent hover:text-background rounded-full px-3 py-1.5 text-sm transition-colors"
   >
     {isDark ? "☀️ Modo claro" : "🌙 Modo escuro"}
   </button>
