@@ -117,7 +117,7 @@ export default function FilterFilms({
     }));
 
     setAllMovies((filmesAtuais) => {
-      const filmesSemDuplicata = novosFilmes.filter((filme) =>
+      const filmesSemDuplicata = novosFilmes.filter((filme: MovieWithGenres) =>
         !filmesAtuais.some((filmeExistente) => filmeExistente.id === filme.id)
       );
 
