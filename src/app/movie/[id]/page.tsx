@@ -7,7 +7,7 @@ export async function generateMetadata({ params }) {
     `https://api.themoviedb.org/3/movie/${id}?language=pt-BR`,
     {
       headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
+        Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
       },
     },
   );
@@ -30,13 +30,13 @@ export default async function MovieDetailPage({ params }) {
   const [movieResponse, creditsResponse] = await Promise.all([
     fetch(`https://api.themoviedb.org/3/movie/${id}?language=pt-BR`, {
       headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
+        Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
       },
     }),
 
     fetch(`https://api.themoviedb.org/3/movie/${id}/credits?language=pt-BR`, {
       headers: {
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
+        Authorization: `Bearer ${process.env.TMDB_API_KEY}`,
       },
     }),
   ]);
