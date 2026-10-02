@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { MovieDetails, CastMember } from "@/app/types";
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params }: PageProps<"/movie/[id]">) {
   const { id } = await params;
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/${id}?language=pt-BR`,
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function MovieDetailPage({ params }) {
+export default async function MovieDetailPage({ params }: PageProps<"/movie/[id]">) {
   const { id } = await params;
 
   const [movieResponse, creditsResponse] = await Promise.all([
