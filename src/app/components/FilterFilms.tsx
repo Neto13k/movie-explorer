@@ -11,7 +11,6 @@ type FilterFilmsProps = {
   genres: Genre[];
 };
 
-// O destino do portal não muda depois de montado, então não há nada a "assinar".
 const subscribe = () => () => {};
 
 export default function FilterFilms({
@@ -25,7 +24,6 @@ export default function FilterFilms({
   const [allMovies, setAllMovies] = useState<MovieWithGenres[]>(movies);
   const observerRef = useRef<HTMLDivElement | null>(null);
 
-  // No navegador: o elemento do Header. No servidor (e no primeiro render): null.
   const portalTarget = useSyncExternalStore(
     subscribe,
     () => document.getElementById("header-search-portal"),
@@ -50,14 +48,14 @@ export default function FilterFilms({
     }
 
     async function buscarFilmes() {
+      // Agora chama a rota do próprio site; o token fica só no servidor
       const response = await fetch(
-        `https://api.themoviedb.org/3/search/movie?query=${searchTerm}&language=pt-BR`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
-          },
-        }
+        `/api/search?q=${encodeURIComponent(searchTerm)}`
       );
+
+      if (!response.ok) {
+        return;
+      }
 
       const data = await response.json();
 
@@ -90,14 +88,11 @@ export default function FilterFilms({
   async function carregarMaisFilmes() {
     const nextPage = currentPage + 1;
 
-    const response = await fetch(
-      `https://api.themoviedb.org/3/movie/popular?language=pt-BR&page=${nextPage}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
-        },
-      }
-    );
+    const response = await fetch(`/api/popular?page=${nextPage}`);
+
+    if (!response.ok) {
+      return;
+    }
 
     const data = await response.json();
 
