@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 
 export default function SearchBar({ onSearch }: { onSearch: (termo: string) => void }) {
+// Estado local controlado: só sobe pro pai depois do debounce
 const [valorDigitado, setValorDigitado] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -9,6 +10,7 @@ const [valorDigitado, setValorDigitado] = useState<string>('');
   };
 
   useEffect(() => {
+    // Debounce: espera o usuário parar de digitar antes de buscar
     const timer = setTimeout(() => {
       onSearch(valorDigitado);
     }, 400);

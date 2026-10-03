@@ -7,6 +7,7 @@ export const metadata = {
 };
 
 export default async function Page() {
+  // Busca filmes e gêneros em paralelo para carregar mais rápido
   const [moviesResponse, genresResponse] = await Promise.all([
     fetch("https://api.themoviedb.org/3/movie/popular?language=pt-BR", {
       headers: {
@@ -22,6 +23,7 @@ export default async function Page() {
   ]);
 
   if (!moviesResponse.ok) {
+    // Next.js captura esse throw e renderiza o error.tsx
     throw new Error(
       `Erro ao buscar filmes: ${moviesResponse.status} ${moviesResponse.statusText}`
     );
@@ -36,18 +38,20 @@ export default async function Page() {
   const moviesData = await moviesResponse.json();
   const genresData = await genresResponse.json();
 
+  // Mapa id → nome para resolver os gêneros dos filmes rapidamente
   const genresMap = new Map<number, string>(
     genresData.genres.map((genre: Genre) => [genre.id, genre.name])
   );
 
   const movies = moviesData.results.map((movie: Movie) => ({
     ...movie,
+    // Troca os ids dos gêneros por objetos {id, name} que o componente usa
     genres: movie.genre_ids
       .map((genreId) => {
         const name = genresMap.get(genreId);
 
         if (!name) {
-          return null;
+          return null; // Gênero não existe mais na lista (raro, mas protege contra dado inconsistente)
         }
 
         return {
@@ -55,6 +59,7 @@ export default async function Page() {
           name,
         };
       })
+      // Type guard: remove os nulls de cima e informa o TypeScript que o array é só de gêneros válidos
       .filter(
         (genre): genre is { id: number; name: string } => genre !== null
       ),

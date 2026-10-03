@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 
 export default function ThemeToggle() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(false); // Começa no claro — sem persistência, sempre reinicia no reload
 
   useEffect(() => {
+  // Aplica/remove a classe na tag html para as variáveis CSS do tema funcionarem
   if (isDark) {
     document.documentElement.classList.add("dark");
   } else {

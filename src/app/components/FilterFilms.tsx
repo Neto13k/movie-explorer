@@ -17,33 +17,34 @@ export default function FilterFilms({
   movies,
   genres,
 }: FilterFilmsProps) {
-  const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
+  const [selectedGenre, setSelectedGenre] = useState<number | null>(null); // null = todos os gêneros
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState<MovieWithGenres[] | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [allMovies, setAllMovies] = useState<MovieWithGenres[]>(movies);
+  const [searchResults, setSearchResults] = useState<MovieWithGenres[] | null>(null); // null = sem busca, usa a lista de populares
+  const [currentPage, setCurrentPage] = useState(1); // Página atual para paginação da TMDB
+  const [allMovies, setAllMovies] = useState<MovieWithGenres[]>(movies); // Acumula as páginas carregadas (rolagem infinita)
   const observerRef = useRef<HTMLDivElement | null>(null);
 
   const portalTarget = useSyncExternalStore(
     subscribe,
     () => document.getElementById("header-search-portal"),
     () => null,
-  );
+  ); // SSR-safe: evita acessar document diretamente no render inicial
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    const genreId = value ? Number(value) : null;
+    const genreId = value ? Number(value) : null; // "" do option padrão vira null (todos os gêneros)
 
     setSelectedGenre(genreId);
   };
 
+  // Mesmo propósito do genresMap do server component — prepara busca e carregamento de páginas novas
   const genresMap = new Map<number, string>(
     genres.map((genre) => [genre.id, genre.name])
   );
 
   useEffect(() => {
     if (searchTerm === "") {
-      setSearchResults(null);
+      setSearchResults(null); // Limpa a busca: volta a exibir a lista de populares
       return;
     }
 
@@ -86,12 +87,13 @@ export default function FilterFilms({
   }, [searchTerm, genresMap]);
 
   async function carregarMaisFilmes() {
-    const nextPage = currentPage + 1;
+    const nextPage = currentPage + 1; // Busca a próxima página de populares
 
+    // Usa a rota do app router em vez de chamar a TMDB direto do cliente
     const response = await fetch(`/api/popular?page=${nextPage}`);
 
     if (!response.ok) {
-      return;
+      return; // Silencia erro: usuário pode só continuar vendo o que já carregou
     }
 
     const data = await response.json();
@@ -117,6 +119,7 @@ export default function FilterFilms({
     }));
 
     setAllMovies((filmesAtuais) => {
+      // Evita filmes duplicados entre páginas diferentes
       const filmesSemDuplicata = novosFilmes.filter((filme: MovieWithGenres) =>
         !filmesAtuais.some((filmeExistente) => filmeExistente.id === filme.id)
       );
@@ -129,7 +132,7 @@ export default function FilterFilms({
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        carregarMaisFilmes();
+        carregarMaisFilmes(); // Carrega quando o usuário chega no fim da lista
       }
     });
 
@@ -142,6 +145,7 @@ export default function FilterFilms({
     };
   }, [currentPage]);
 
+  // Mostra resultados da busca ou da lista de populares + filtra por gênero
   const filteredMovies = (searchResults ?? allMovies).filter((movie) =>
     selectedGenre === null ||
     movie.genres.some((genre) => genre.id === selectedGenre)

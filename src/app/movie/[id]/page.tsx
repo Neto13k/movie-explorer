@@ -3,6 +3,7 @@ import { MovieDetails, CastMember } from "@/app/types";
 
 export async function generateMetadata({ params }: PageProps<"/movie/[id]">) {
   const { id } = await params;
+  // Executa no servidor — define <title> e <meta description> dinâmicos por filme
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/${id}?language=pt-BR`,
     {
@@ -27,6 +28,7 @@ export async function generateMetadata({ params }: PageProps<"/movie/[id]">) {
 export default async function MovieDetailPage({ params }: PageProps<"/movie/[id]">) {
   const { id } = await params;
 
+  // Busca detalhes do filme e elenco em paralelo para carregar mais rápido
   const [movieResponse, creditsResponse] = await Promise.all([
     fetch(`https://api.themoviedb.org/3/movie/${id}?language=pt-BR`, {
       headers: {
@@ -56,10 +58,11 @@ export default async function MovieDetailPage({ params }: PageProps<"/movie/[id]
   const movie: MovieDetails = await movieResponse.json();
   const creditsData: { cast: CastMember[] } = await creditsResponse.json();
 
-  const cast = creditsData.cast;
+  const cast = creditsData.cast; // creditsData tem cast + crew, só usamos o elenco
 
   return (
     <main className="max-w-5xl mx-auto p-4">
+      {/* Layout responsivo: no mobile 1 coluna, no desktop poster à esquerda + detalhes à direita */}
       <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6">
         <div>
           {movie.poster_path && (
@@ -73,6 +76,7 @@ export default async function MovieDetailPage({ params }: PageProps<"/movie/[id]
         <div className="space-y-3">
           <h1 className="text-2xl font-bold">{movie.title}</h1>
 
+          {/* Gêneros como "chips" coloridos */}
           <div className="flex flex-wrap gap-2">
             {movie.genres.map((genre) => (
               <span
@@ -86,7 +90,7 @@ export default async function MovieDetailPage({ params }: PageProps<"/movie/[id]
 
           <p className="text-sm text-foreground/70">{movie.release_date}</p>
           <p className="text-accent font-semibold">
-            Nota: {movie.vote_average.toFixed(1)}
+            Nota: {movie.vote_average.toFixed(1)} {/* 1 casa decimal, ex: "7.5" */}
           </p>
           <p className="text-sm leading-relaxed">{movie.overview}</p>
         </div>
@@ -94,6 +98,7 @@ export default async function MovieDetailPage({ params }: PageProps<"/movie/[id]
 
       <h2 className="text-xl font-bold mt-8 mb-3">Elenco</h2>
 
+      {/* overflow-x-auto: permite rolar horizontalmente quando o elenco é grande */}
       <div className="flex gap-4 overflow-x-auto pb-2">
         {cast.map((member) => (
           <div key={member.id} className="flex-shrink-0 w-28">
@@ -104,6 +109,7 @@ export default async function MovieDetailPage({ params }: PageProps<"/movie/[id]
                 className="w-full aspect-[2/3] object-cover rounded-md"
               />
             ) : (
+              // Quando não tem foto, mostra a inicial do nome como placeholder
               <div className="w-full aspect-[2/3] rounded-md bg-foreground/10 flex items-center justify-center text-lg font-bold text-foreground/40">
                 {member.name.charAt(0)}
               </div>
