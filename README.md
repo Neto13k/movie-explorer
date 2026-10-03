@@ -4,7 +4,7 @@ Aplicação Next.js para explorar filmes populares, com busca por título, filtr
 
 Construído como projeto de aprendizado de Next.js (App Router) e peça de portfólio.
 
-**Demo:** [link do deploy na Vercel](#)
+**Demo:** [[link do deploy na Vercel](https://movie-explorer-br.vercel.app/)](#)
 
 ---
 
